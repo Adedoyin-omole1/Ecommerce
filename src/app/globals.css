@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+/* ==========================================
+   AUTO-SCROLL CAROUSEL (used by ImageStrip)
+   ========================================== */
+@keyframes scrollStrip {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Utility: hides native scrollbars cross-browser */
+.scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+
+/* ==========================================
+   ANIMATIONS — About Page
+   ========================================== */
+
+/* Infinite horizontal scroll (for carousel + marquee) */
+@keyframes scrollStrip {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Fade in from bottom (used on scroll reveal) */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Soft fade in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Marquee text scroll (right to left) */
+@keyframes marqueeLeft {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Marquee text scroll (left to right) */
+@keyframes marqueeRight {
+    from {
+        transform: translateX(-50%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* Progress bar animation (used in verify email success) */
+@keyframes progress {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+/* Cross-fade for testimonial rotation (used in auth pages) */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================
+   PRINT STYLES — Order Receipt
+   ========================================== */
+@media print {
+
+    /* Hide everything by default */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Show only the receipt card */
+    #print-receipt,
+    #print-receipt * {
+        visibility: visible;
+    }
+
+    /* Position the receipt at the top-left of the page */
+    #print-receipt {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    /* Hide any elements marked with data-print-hide */
+    [data-print-hide] {
+        display: none !important;
+    }
+
+    /* Ensure background colors print (for the totals & payment block) */
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Clean page margins */
+    @page {
+        margin: 20mm;
+    }
+}

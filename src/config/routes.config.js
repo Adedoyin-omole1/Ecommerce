@@ -1,0 +1,36 @@
+export const routesConfig = {
+  auth: {
+    login: "/login",
+    register: "/register",
+    forgotPassword: "/forgot-password",
+    resetPassword: "/reset-password",
+  },
+  admin: {
+    dashboard: "/admin/dashboard",
+    products: "/admin/products",
+    productNew: "/admin/products/new",
+    productDetail: (id) => `/admin/products/${id}`,
+    orders: "/admin/orders",
+    orderDetail: (id) => `/admin/orders/${id}`,
+    customers: "/admin/customers",
+    settings: "/admin/settings",
+  },
+  customer: {
+    shop: "/shop",
+    product: (id) => `/product/${id}`,
+    cart: "/cart",
+    checkout: "/checkout",
+    wishlist: "/wishlist",
+    account: "/account",
+    orders: "/account/orders",
+    profile: "/account/profile",
+  },
+  main: {
+    home: "/",
+    about: "/about",
+    contact: "/contact",
+    faq: "/faq",
+    terms: "/terms",
+    privacy: "/privacy",
+  },
+};
