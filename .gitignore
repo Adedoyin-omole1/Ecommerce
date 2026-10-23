@@ -40,3 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /public/assets/videos/video2.mp4
+/public/assets/videos/video2.mp4
