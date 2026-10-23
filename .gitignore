@@ -39,4 +39,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-public/assets/videos/2985409-uhd_3840_2160_24fps.mp4
+/public/assets/videos/video2.mp4
