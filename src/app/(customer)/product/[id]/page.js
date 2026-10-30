@@ -34,13 +34,22 @@ export default function ProductDetailsPage() {
         const imgs = foundProduct.images?.length > 0 ? foundProduct.images : (foundProduct.image ? [foundProduct.image] : []);
         setActiveImage(imgs[0] || '');
 
-        // Safely set default color string
-        if (foundProduct.colors?.length > 0) {
-          const firstColor = foundProduct.colors[0];
-          setSelectedColor(typeof firstColor === 'string' ? firstColor : firstColor.name);
+        // Safely parse old JSON data from database
+        let colors = foundProduct.colors || [];
+        colors = colors.map(c => {
+          if (typeof c === 'string') {
+            if (c.startsWith('{')) {
+              try { return JSON.parse(c).name || c; } catch (e) { return c; }
+            }
+            return c;
+          }
+          return c.name || '';
+        });
+
+        if (colors.length > 0) {
+          setSelectedColor(colors[0]);
         }
 
-        // Set default size
         if (foundProduct.sizes?.length > 0) {
           setSelectedSize(foundProduct.sizes[0]);
         }
@@ -71,8 +80,16 @@ export default function ProductDetailsPage() {
   const hasDiscount = product.old_price && Number(product.old_price) > price;
   const oldPrice = hasDiscount ? Number(product.old_price) : null;
 
-  // Safely map display colors to simple strings
-  const displayColors = product.colors?.map(c => typeof c === 'string' ? c : c.name) || [];
+  // Safely display strings
+  const displayColors = product.colors?.map(c => {
+    if (typeof c === 'string') {
+      if (c.startsWith('{')) {
+        try { return JSON.parse(c).name || c; } catch (e) { return c; }
+      }
+      return c;
+    }
+    return c.name || '';
+  }).filter(Boolean) || [];
 
   const handleAddToCart = () => {
     if (product.sizes?.length > 0 && !selectedSize) return toast.error('Please select a size');
@@ -177,8 +194,8 @@ export default function ProductDetailsPage() {
                       key={idx}
                       onClick={() => setSelectedColor(colorName)}
                       className={`min-w-9 h-9 px-3 text-[12px] font-bold border transition-all flex items-center justify-center uppercase tracking-wider ${selectedColor === colorName
-                        ? 'border-red-500 bg-red-500 text-white'
-                        : 'border-gray-200 text-gray-700 hover:border-gray-900 bg-white'
+                          ? 'border-red-500 bg-red-500 text-white'
+                          : 'border-gray-200 text-gray-700 hover:border-gray-900 bg-white'
                         }`}
                     >
                       {colorName}
@@ -198,8 +215,8 @@ export default function ProductDetailsPage() {
                       key={size}
                       onClick={() => setSelectedSize(size)}
                       className={`min-w-9 h-9 px-2 text-[12px] font-bold border transition-all flex items-center justify-center ${selectedSize === size
-                        ? 'border-red-500 bg-red-500 text-white'
-                        : 'border-gray-200 text-gray-700 hover:border-gray-900 bg-white'
+                          ? 'border-red-500 bg-red-500 text-white'
+                          : 'border-gray-200 text-gray-700 hover:border-gray-900 bg-white'
                         }`}
                     >
                       {size}
