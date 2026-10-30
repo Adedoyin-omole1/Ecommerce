@@ -16,7 +16,7 @@ export default function ResetPasswordPage() {
   return (
     <AuthShell
       leftPanelProps={{
-        brand: 'King\u2019s Kollitab',
+        brand: 'King\u2019s  Kollectibles',
         headline: 'Almost there',
         footerLinks: [
           { label: 'Sign In', href: '/login' },

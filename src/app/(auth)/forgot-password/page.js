@@ -12,7 +12,7 @@ export default function ForgotPasswordPage() {
   return (
     <AuthShell
       leftPanelProps={{
-        brand: 'King\u2019s Kollitab',
+        brand: 'King\u2019s Kollectibles',
         headline: 'We\u2019ve got you covered',
         footerLinks: [
           { label: 'Sign In', href: '/login' },

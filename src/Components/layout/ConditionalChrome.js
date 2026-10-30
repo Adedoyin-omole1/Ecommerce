@@ -5,27 +5,46 @@ import { usePathname } from 'next/navigation';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
-// Auth routes hide both Navbar and Footer
-const AUTH_ROUTES = ['/login', '/signup', '/register', '/forgot-password', '/verify', '/reset-password'];
+// Add '/admin' and '/dashboard' here
+const NO_CHROME_ROUTES = [
+    '/login',
+    '/signup',
+    '/register',
+    '/forgot-password',
+    '/verify',
+    '/reset-password',
+    '/admin',
+    '/dashboard',
+    '/orders',
+    '/products',
+    '/customers',
+    '/analytics',
+    '/marketing',
+    '/discounts',
+    '/reports',
+    '/online-store',
+    '/social',
+    '/marketplaces',
+    '/settings'
+];
 
-function useIsAuthRoute() {
+function useIsNoChromeRoute() {
     const pathname = usePathname();
-    return AUTH_ROUTES.some((route) => pathname.startsWith(route));
+    return NO_CHROME_ROUTES.some((route) => pathname.startsWith(route));
 }
 
 export function ConditionalNavbar() {
-    const isAuthRoute = useIsAuthRoute();
-    if (isAuthRoute) return null;
+    const isNoChromeRoute = useIsNoChromeRoute();
+    if (isNoChromeRoute) return null;
     return <Navbar />;
 }
 
 export function ConditionalFooter() {
-    const isAuthRoute = useIsAuthRoute();
-    if (isAuthRoute) return null;
+    const isNoChromeRoute = useIsNoChromeRoute();
+    if (isNoChromeRoute) return null;
     return <Footer />;
 }
 
-// Default export kept for compatibility — returns both
 export default function ConditionalChrome() {
     return (
         <>

@@ -60,7 +60,7 @@ export default function OpayPanel({ onSuccess }) {
                         Account Name
                     </p>
                     <p className="mt-1 text-[14px] font-bold text-gray-900">
-                        King&apos;s Kollitab Ltd
+                        King&apos;s  Kollectibles Ltd
                     </p>
                 </div>
                 <div>

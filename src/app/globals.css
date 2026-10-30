@@ -1,19 +1,186 @@
 @import "tailwindcss";
 
 /* ==========================================
-   AUTO-SCROLL CAROUSEL (used by ImageStrip)
+   RESPONSIVE BASE - Global
    ========================================== */
-@keyframes scrollStrip {
-    from {
-        transform: translateX(0);
-    }
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
 
-    to {
-        transform: translateX(-50%);
+html,
+body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+table {
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+}
+
+@media (min-width: 768px) {
+    table {
+        display: table;
     }
 }
 
-/* Utility: hides native scrollbars cross-browser */
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+:where(.flex, .grid) > * {
+    min-width: 0;
+}
+
+main {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Responsive container helper */
+.container-responsive {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(0.875rem, 0.5rem + 2vw, 1.5rem);
+    padding-right: clamp(0.875rem, 0.5rem + 2vw, 1.5rem);
+}
+
+@media (min-width: 640px) {
+    .container-responsive {
+        padding-left: clamp(1rem, 0.5rem + 2vw, 1.5rem);
+        padding-right: clamp(1rem, 0.5rem + 2vw, 1.5rem);
+    }
+}
+
+@media (min-width: 1024px) {
+    .container-responsive {
+        padding-left: clamp(1.5rem, 1rem + 2vw, 2rem);
+        padding-right: clamp(1.5rem, 1rem + 2vw, 2rem);
+        max-width: min(100%, 1300px);
+    }
+}
+
+@media (min-width: 1280px) {
+    .container-responsive {
+        max-width: min(100%, 1360px);
+    }
+}
+
+@media (min-width: 1536px) {
+    .container-responsive {
+        max-width: min(100%, 1440px);
+    }
+}
+
+@media (min-width: 1920px) {
+    .container-responsive {
+        max-width: min(100%, 1600px);
+    }
+}
+
+@media (min-width: 2560px) {
+    .container-responsive {
+        max-width: min(100%, 1800px);
+    }
+}
+
+/* Fluid typography helpers */
+.fluid-text-xs {
+    font-size: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+}
+
+.fluid-text-sm {
+    font-size: clamp(0.875rem, 0.825rem + 0.25vw, 1rem);
+}
+
+.fluid-text-base {
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+}
+
+.fluid-text-lg {
+    font-size: clamp(1.125rem, 1.05rem + 0.375vw, 1.25rem);
+}
+
+.fluid-text-xl {
+    font-size: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+}
+
+.fluid-text-2xl {
+    font-size: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+}
+
+.fluid-text-3xl {
+    font-size: clamp(1.875rem, 1.5rem + 1.875vw, 2.5rem);
+}
+
+.fluid-text-4xl {
+    font-size: clamp(2.25rem, 1.75rem + 2.5vw, 3rem);
+}
+
+.fluid-text-5xl {
+    font-size: clamp(2.5rem, 2rem + 3vw, 4rem);
+}
+
+/* Responsive spacing utilities */
+.section-py {
+    padding-top: clamp(1.5rem, 1rem + 3vw, 4rem);
+    padding-bottom: clamp(1.5rem, 1rem + 3vw, 4rem);
+}
+
+.section-py-sm {
+    padding-top: clamp(1rem, 0.75rem + 1.5vw, 2.5rem);
+    padding-bottom: clamp(1rem, 0.75rem + 1.5vw, 2.5rem);
+}
+
+/* Responsive flex/grid helpers */
+.responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: clamp(0.75rem, 0.5rem + 1vw, 1.5rem);
+}
+
+@media (min-width: 640px) {
+    .responsive-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .responsive-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1280px) {
+    .responsive-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+/* Hide scrollbars for overflow containers */
 .scrollbar-none {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -21,6 +188,14 @@
 
 .scrollbar-none::-webkit-scrollbar {
     display: none;
+}
+
+/* Safe area for mobile */
+@supports (padding: max(0px)) {
+    .safe-padding {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+    }
 }
 
 /* ==========================================

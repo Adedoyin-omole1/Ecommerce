@@ -250,14 +250,14 @@ export default function WishlistPage() {
               <input
                 type="text"
                 readOnly
-                defaultValue="https://king's Kollitable.com/wishlist/abc123"
+                defaultValue="https://king's  Kollectiblesle.com/wishlist/abc123"
                 className="w-48 sm:w-64 text-[11.5px] text-gray-500 bg-transparent border-0 outline-none"
               />
               <button
                 onClick={handleCopyLink}
                 className={`inline-flex items-center gap-1.5 h-7 px-3 rounded-full text-[11.5px] font-semibold transition-colors ${copied
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-gray-900 hover:bg-red-500 text-white'
+                  ? 'bg-emerald-500 text-white'
+                  : 'bg-gray-900 hover:bg-red-500 text-white'
                   }`}
               >
                 {copied ? (

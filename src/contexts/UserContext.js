@@ -2,71 +2,141 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+import toast from 'react-hot-toast';
 
 const UserContext = createContext(null);
-const STORAGE_KEY = 'novatrend-user';
 
 export function UserProvider({ children }) {
     const [user, setUser] = useState(null);
-    const [hydrated, setHydrated] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    // ---------- Load from localStorage on mount ----------
+    // Check active session on load
     useEffect(() => {
-        try {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            if (raw) setUser(JSON.parse(raw));
-        } catch (err) {
-            console.error('Failed to load user:', err);
-        } finally {
-            setHydrated(true);
-        }
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (session) {
+                await fetchUserProfile(session.user);
+            }
+            setLoading(false);
+        };
+
+        checkSession();
+
+        const { data: authListener } = supabase.auth.onAuthStateChange(
+            async (event, session) => {
+                if (session) {
+                    await fetchUserProfile(session.user);
+                } else {
+                    setUser(null);
+                }
+            }
+        );
+
+        return () => authListener.subscription.unsubscribe();
     }, []);
 
-    // ---------- Persist on change ----------
-    useEffect(() => {
-        if (!hydrated) return;
-        try {
-            if (user) {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-            } else {
-                localStorage.removeItem(STORAGE_KEY);
-            }
-        } catch (err) {
-            console.error('Failed to save user:', err);
-        }
-    }, [user, hydrated]);
+    // Helper to fetch profile data (Role, Name)
+    const fetchUserProfile = async (authUser) => {
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', authUser.id)
+            .single();
 
-    // ---------- API ----------
-    const login = (userData) => {
         setUser({
-            id: userData.id || `user_${Date.now()}`,
-            name: userData.name || 'Guest',
-            email: userData.email || '',
-            avatar: userData.avatar || null,
-            role: userData.role || 'customer',
-            joinedAt: userData.joinedAt || new Date().toISOString(),
+            id: authUser.id,
+            email: authUser.email,
+            name: profile?.full_name || authUser.email.split('@')[0],
+            // Prioritize the profile table role, then metadata, then default to customer
+            role: profile?.role || authUser.user_metadata?.role || 'customer',
         });
     };
 
-    const logout = () => setUser(null);
+    // ✅ NEW: Update user profile (Name, Email, etc.)
+    const updateUser = async (updatedData) => {
+        // 1. Instantly update the UI so the user sees the change immediately
+        setUser(prev => ({ ...prev, ...updatedData }));
 
-    const updateUser = (patch) => {
-        setUser((prev) => (prev ? { ...prev, ...patch } : prev));
+        // 2. Save to Supabase 'profiles' table in the background
+        if (user?.id) {
+            const { error } = await supabase
+                .from('profiles')
+                .update({
+                    full_name: updatedData.name,
+                    // You can add more fields here if you update your database schema
+                })
+                .eq('id', user.id);
+
+            if (error) {
+                console.error('Failed to update profile:', error);
+                toast.error('Failed to save changes to database');
+            }
+        }
     };
 
-    const isLoggedIn = !!user;
+    // 1. Customer Signup (Sends OTP)
+    const signup = async (email, password, fullName) => {
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    full_name: fullName,
+                    role: 'customer', // Force role to customer
+                },
+                // This ensures Supabase sends an OTP code, not a magic link
+                emailRedirectTo: undefined,
+            }
+        });
+
+        if (error) {
+            toast.error(error.message);
+            return false;
+        }
+
+        toast.success('Verification code sent to your email!');
+        return true; // Return true so page redirects to /verify
+    };
+
+    // 2. Verify OTP Code
+    const verifyOtp = async (email, token) => {
+        const { data, error } = await supabase.auth.verifyOtp({
+            email,
+            token,
+            type: 'signup'
+        });
+
+        if (error) {
+            toast.error(error.message);
+            return false;
+        }
+        return true; // Successfully verified and logged in
+    };
+
+    // 3. Login (For both Admin and Customers)
+    const login = async (email, password) => {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (error) {
+            toast.error(error.message);
+            return false;
+        }
+        return true;
+    };
+
+    const logout = async () => {
+        await supabase.auth.signOut();
+        setUser(null);
+        toast.success('Logged out');
+    };
 
     return (
-        <UserContext.Provider
-            value={{
-                user,
-                isLoggedIn,
-                hydrated,
-                login,
-                logout,
-                updateUser,
-            }}
-        >
+        <UserContext.Provider value={{ user, loading, signup, login, verifyOtp, logout, updateUser }}>
             {children}
         </UserContext.Provider>
     );

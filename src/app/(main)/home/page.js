@@ -33,7 +33,7 @@ export default function HomePage() {
     };
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen w-full overflow-x-hidden bg-white">
             {/* Dashboard Sections */}
             <Section1 />
             <Section2 />

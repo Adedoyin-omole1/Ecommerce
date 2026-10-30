@@ -1,37 +1,54 @@
-// src/app/(auth)/verify/page.js
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import AuthShell from '@/Components/auth/AuthShell';
 import VerifyEmailForm from '@/Components/auth/VerifyEmailForm';
+import { useUser } from '@/contexts/UserContext';
+import toast from 'react-hot-toast';
 
 export default function VerifyPage() {
+    const router = useRouter();
     const searchParams = useSearchParams();
-    const email = searchParams.get('email') || 'your@email.com';
+    const { verifyOtp } = useUser();
 
-    const handleVerify = (code) => {
-        console.log('Verify code:', code);
-    };
+    // Get email from URL (?email=user@example.com)
+    const email = searchParams.get('email') || '';
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleResend = () => {
-        console.log('Resend code to:', email);
+    useEffect(() => {
+        if (!email) {
+            toast.error('No email provided for verification');
+            router.push('/signup');
+        }
+    }, [email, router]);
+
+    const handleVerify = async (code) => {
+        setIsLoading(true);
+        const success = await verifyOtp(email, code);
+
+        if (success) {
+            toast.success('Account verified! Welcome.');
+            router.push('/home'); // Send customer to shop
+        }
+        setIsLoading(false);
     };
 
     return (
         <AuthShell
             leftPanelProps={{
-                brand: 'King\u2019s Kollitab',
-                headline: 'One step away',
+                brand: 'King\u2019s Kollectibles',
+                headline: 'Almost there',
                 footerLinks: [
                     { label: 'Sign In', href: '/login' },
-                    { label: 'Sign Up', href: '/signup' },
+                    { label: 'Support', href: '/contact' },
                 ],
             }}
         >
             <VerifyEmailForm
                 email={email}
                 onSubmit={handleVerify}
-                onResend={handleResend}
+                isLoading={isLoading}
             />
         </AuthShell>
     );

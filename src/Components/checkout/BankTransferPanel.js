@@ -12,10 +12,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 const BANK_ACCOUNTS = [
-    { bank: 'Paystack-Titan', accountNumber: '9992190523', accountName: "King's Kollitab Ltd" },
-    { bank: 'Providus Bank', accountNumber: '8842105379', accountName: "King's Kollitab Ltd" },
-    { bank: 'Wema Bank', accountNumber: '7315562084', accountName: "King's Kollitab Ltd" },
-    { bank: 'Sterling Bank', accountNumber: '5578184203', accountName: "King's Kollitab Ltd" },
+    { bank: 'Paystack-Titan', accountNumber: '9992190523', accountName: "King's  Kollectibles Ltd" },
+    { bank: 'Providus Bank', accountNumber: '8842105379', accountName: "King's  Kollectibles Ltd" },
+    { bank: 'Wema Bank', accountNumber: '7315562084', accountName: "King's  Kollectibles Ltd" },
+    { bank: 'Sterling Bank', accountNumber: '5578184203', accountName: "King's  Kollectibles Ltd" },
 ];
 
 const TIMER_SECONDS = 5 * 60;

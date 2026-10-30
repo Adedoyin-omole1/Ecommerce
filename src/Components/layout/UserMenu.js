@@ -16,9 +16,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useUser } from '@/contexts/UserContext';
 
-// ==========================================
-// MENU ITEMS
-// ==========================================
 const MENU_ITEMS = [
     { label: 'My Account', href: '/account', icon: faGauge },
     { label: 'Orders', href: '/account/orders', icon: faBoxOpen },
@@ -61,7 +58,6 @@ export default function UserMenu() {
 
     if (!user) return null;
 
-    // ----- Initials fallback -----
     const initials = user.name
         ? user.name
             .split(' ')
@@ -73,8 +69,6 @@ export default function UserMenu() {
 
     return (
         <div ref={ref} className="relative">
-
-            {/* Trigger — avatar + name */}
             <button
                 onClick={() => setOpen(!open)}
                 aria-haspopup="true"
@@ -107,11 +101,8 @@ export default function UserMenu() {
                 />
             </button>
 
-            {/* Dropdown */}
             {open && (
                 <div className="absolute right-0 top-full mt-3 w-64 bg-white rounded-2xl border border-gray-100 shadow-2xl shadow-black/5 z-50 overflow-hidden">
-
-                    {/* Header */}
                     <div className="px-5 py-4 bg-linear-to-br from-orange-50 to-red-50/50 border-b border-gray-100">
                         <div className="flex items-center gap-3">
                             <span className="flex items-center justify-center w-10 h-10 rounded-full bg-linear-to-br from-orange-500 to-red-500 text-white text-[13px] font-bold shadow-sm">
@@ -136,7 +127,6 @@ export default function UserMenu() {
                         </div>
                     </div>
 
-                    {/* Menu items */}
                     <div className="py-1.5">
                         {MENU_ITEMS.map((item) => (
                             <Link
@@ -154,7 +144,6 @@ export default function UserMenu() {
                         ))}
                     </div>
 
-                    {/* Footer — logout */}
                     <div className="border-t border-gray-100 py-1.5">
                         <button
                             onClick={handleLogout}

@@ -7,7 +7,7 @@ import { faCrown } from '@fortawesome/free-solid-svg-icons';
 import TestimonialCarousel from './TestimonialCarousel';
 
 export default function AuthTestimonialPanel({
-    brand = 'King\u2019s Kollitab',
+    brand = 'King\u2019s  Kollectibles',
     headline = 'Loved by thousands',
     footerLinks = [
         { label: 'Sign In', href: '/login' },

@@ -4,7 +4,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEye,
+  faEyeSlash,
+  faUser,
+  faUserShield,
+} from '@fortawesome/free-solid-svg-icons';
 import {
   faFacebookF,
   faXTwitter,
@@ -16,6 +21,7 @@ export default function LoginForm({ onSubmit }) {
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
+  const [role, setRole] = useState('customer'); // 'customer' | 'admin'
 
   const handleChange = (field, value) =>
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -23,8 +29,10 @@ export default function LoginForm({ onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.email || !form.password) return;
-    onSubmit?.(form);
+    onSubmit?.({ ...form, role });
   };
+
+  const isAdmin = role === 'admin';
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -32,11 +40,39 @@ export default function LoginForm({ onSubmit }) {
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-[22px] font-bold text-gray-900">
-          Welcome back
+          {isAdmin ? 'Admin Sign In' : 'Welcome back'}
         </h1>
         <p className="mt-1.5 text-[13px] text-gray-500">
-          Sign in to continue to your account
+          {isAdmin
+            ? 'Access the admin dashboard'
+            : 'Sign in to continue to your account'}
         </p>
+      </div>
+
+      {/* Role toggle */}
+      <div className="flex items-center gap-1 p-1 mb-6 rounded-full bg-gray-50 border border-gray-100">
+        <button
+          type="button"
+          onClick={() => setRole('customer')}
+          className={`flex-1 inline-flex items-center justify-center gap-2 h-9 rounded-full text-[12.5px] font-semibold transition-all ${role === 'customer'
+              ? 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-500 hover:text-gray-700'
+            }`}
+        >
+          <FontAwesomeIcon icon={faUser} className="w-3 h-3" />
+          Customer
+        </button>
+        <button
+          type="button"
+          onClick={() => setRole('admin')}
+          className={`flex-1 inline-flex items-center justify-center gap-2 h-9 rounded-full text-[12.5px] font-semibold transition-all ${role === 'admin'
+              ? 'bg-red-500 text-white shadow-md shadow-red-500/25'
+              : 'text-gray-500 hover:text-gray-700'
+            }`}
+        >
+          <FontAwesomeIcon icon={faUserShield} className="w-3 h-3" />
+          Admin
+        </button>
       </div>
 
       {/* Form */}
@@ -52,7 +88,7 @@ export default function LoginForm({ onSubmit }) {
             required
             value={form.email}
             onChange={(e) => handleChange('email', e.target.value)}
-            placeholder="Enter your email"
+            placeholder={isAdmin ? 'admin@example.com' : 'Enter your email'}
             className="w-full h-11 bg-[#faf7f5] border border-transparent focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/15 rounded-lg px-4 text-[13px] text-gray-900 placeholder:text-gray-400 outline-none transition-all"
           />
         </div>
@@ -111,37 +147,46 @@ export default function LoginForm({ onSubmit }) {
           type="submit"
           className="w-full h-11 bg-red-500 hover:bg-red-600 text-white text-[13px] font-semibold rounded-lg shadow-md shadow-red-500/25 hover:shadow-lg hover:shadow-red-500/40 hover:-translate-y-px transition-all"
         >
-          Sign In
+          {isAdmin ? 'Sign In to Admin' : 'Sign In'}
         </button>
       </form>
 
-      {/* Divider */}
-      <div className="flex items-center gap-3 my-6">
-        <span className="flex-1 h-px bg-gray-200" />
-        <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
-          Sign In with
-        </span>
-        <span className="flex-1 h-px bg-gray-200" />
-      </div>
+      {/* Divider + Socials — only for customers */}
+      {!isAdmin && (
+        <>
+          <div className="flex items-center gap-3 my-6">
+            <span className="flex-1 h-px bg-gray-200" />
+            <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">
+              Sign In with
+            </span>
+            <span className="flex-1 h-px bg-gray-200" />
+          </div>
 
-      {/* Social buttons */}
-      <div className="flex items-center justify-center gap-3">
-        <SocialButton icon={faFacebookF} label="Facebook" />
-        <SocialButton icon={faXTwitter} label="X" />
-        <SocialButton icon={faGoogle} label="Google" />
-        <SocialButton icon={faApple} label="Apple" />
-      </div>
+          <div className="flex items-center justify-center gap-3">
+            <SocialButton icon={faFacebookF} label="Facebook" />
+            <SocialButton icon={faXTwitter} label="X" />
+            <SocialButton icon={faGoogle} label="Google" />
+            <SocialButton icon={faApple} label="Apple" />
+          </div>
 
-      {/* Bottom link */}
-      <p className="mt-8 text-center text-[12.5px] text-gray-500">
-        Don&apos;t have an account?{' '}
-        <Link
-          href="/signup"
-          className="font-semibold text-red-500 hover:text-red-600 transition-colors"
-        >
-          Sign up
-        </Link>
-      </p>
+          <p className="mt-8 text-center text-[12.5px] text-gray-500">
+            Don&apos;t have an account?{' '}
+            <Link
+              href="/signup"
+              className="font-semibold text-red-500 hover:text-red-600 transition-colors"
+            >
+              Sign up
+            </Link>
+          </p>
+        </>
+      )}
+
+      {/* Admin note */}
+      {isAdmin && (
+        <p className="mt-8 text-center text-[11.5px] text-gray-400">
+          Admin access is restricted to authorized personnel only.
+        </p>
+      )}
     </div>
   );
 }

@@ -68,7 +68,7 @@ export default function OrderReceipt({ orderData }) {
                             </span>
                             <div className="flex flex-col leading-none">
                                 <span className="text-[14px] font-bold font-serif text-gray-900">
-                                    King&apos;s Kollitab
+                                    King&apos;s  Kollectibles
                                 </span>
                                 <span className="mt-0.5 text-[8px] font-medium uppercase tracking-[0.28em] text-gray-400">
                                     Premium Collections

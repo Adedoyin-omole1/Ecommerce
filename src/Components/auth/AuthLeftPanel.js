@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function AuthLeftPanel({
-    brand = 'King\u2019s Kollitab',
+    brand = 'King\u2019s  Kollectibles',
     title = 'Speedy, Easy and Fast',
     description = 'Sign in to access your saved items, track orders in real time, and unlock member-only drops curated just for you.',
     footerLinks = [

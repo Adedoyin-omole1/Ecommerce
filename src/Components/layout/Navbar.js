@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
 import MegaMenu from './Megadropdown';
@@ -11,7 +11,6 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useUser } from '@/contexts/UserContext';
 
-// Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBars,
@@ -24,9 +23,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 
-// ==========================================
-// TOP-LEVEL NAV LINKS
-// ==========================================
 const NAV_LINKS = [
   { name: 'Home', href: '/home' },
   { name: 'Categories', href: '/shop', isMega: true },
@@ -37,11 +33,19 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isMegaOpen, setIsMegaOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
 
   const { count: cartCount } = useCart();
   const { count: wishlistCount } = useWishlist();
-  const { isLoggedIn } = useUser();
+  const { user } = useUser();
+
+  // ✅ PREVENT HYDRATION MISMATCH: Only check login state after mounting on client
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const isLoggedIn = isMounted && !!user;
 
   const openTimeout = useRef(null);
   const closeTimeout = useRef(null);
@@ -60,23 +64,21 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white border-b border-gray-100">
-      {/* ============ NAVBAR INNER ============ */}
       <div className="max-w-325 mx-auto px-6 lg:px-8">
         <div className="flex h-18 items-center justify-between gap-6">
 
-          {/* ================= LEFT: CROWN AS "A" LOGO ================= */}
+          {/* LOGO */}
           <Link
             href="/home"
-            aria-label="King's Kollitab — Home"
+            aria-label="King's Kollectibles — Home"
             className="group shrink-0 flex flex-col justify-center leading-none"
           >
             <span className="flex items-baseline gap-0.75 font-serif">
               <span className="text-[19px] font-light italic tracking-tight text-gray-900 group-hover:text-red-500 transition-colors">
                 King&apos;s
               </span>
-
               <span className="relative inline-flex items-baseline text-[21px] font-bold tracking-tight text-gray-900 group-hover:text-red-500 transition-colors">
-                <span>Kollit</span>
+                <span>Kollect</span>
                 <span className="relative inline-flex items-center justify-center mx-px translate-y-px">
                   <FontAwesomeIcon
                     icon={faCrown}
@@ -84,16 +86,15 @@ export default function Navbar() {
                   />
                   <span className="absolute -top-0.5 right-0 w-1 h-1 rounded-full bg-amber-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </span>
-                <span>bals</span>
+                <span>bles</span>
               </span>
             </span>
-
             <span className="mt-1 text-[8.5px] font-medium uppercase tracking-[0.36em] text-gray-400 group-hover:text-gray-500 transition-colors">
               Premium Collections
             </span>
           </Link>
 
-          {/* ================= CENTER: NAV LINKS ================= */}
+          {/* CENTER: NAV LINKS */}
           <div className="hidden lg:flex items-center justify-center flex-1 gap-9">
             {NAV_LINKS.map((link) => {
               const isActive =
@@ -140,10 +141,8 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* ================= RIGHT: ICONS (LIVE) ================= */}
+          {/* RIGHT: ICONS */}
           <div className="hidden lg:flex items-center gap-4">
-
-            {/* Search */}
             <button
               aria-label="Search"
               className="text-gray-800 hover:text-red-500 transition-colors"
@@ -151,7 +150,6 @@ export default function Navbar() {
               <FontAwesomeIcon icon={faMagnifyingGlass} className="w-4 h-4" />
             </button>
 
-            {/* Wishlist — LIVE badge */}
             <Link
               href="/wishlist"
               aria-label={`Wishlist (${wishlistCount} items)`}
@@ -165,7 +163,6 @@ export default function Navbar() {
               )}
             </Link>
 
-            {/* Cart — LIVE badge */}
             <Link
               href="/cart"
               aria-label={`Cart (${cartCount} items)`}
@@ -179,32 +176,32 @@ export default function Navbar() {
               )}
             </Link>
 
-            {/* Account — UserMenu if logged in, else Login/Signup */}
-            {isLoggedIn ? (
-              <UserMenu />
-            ) : (
-              <div className="flex items-center gap-2 pl-3 border-l border-gray-200">
-                <Link
-                  href="/login"
-                  className="text-[12.5px] font-medium text-gray-700 hover:text-red-500 transition-colors"
-                >
-                  Login
-                </Link>
-                <span className="text-gray-300">/</span>
-                <Link
-                  href="/signup"
-                  className="inline-flex items-center justify-center h-8 px-3.5 rounded-full bg-red-500 hover:bg-red-600 text-white text-[12px] font-semibold shadow-sm shadow-red-500/25 hover:shadow-md transition-all"
-                >
-                  Sign Up
-                </Link>
-              </div>
+            {/* Login/User Menu (Client Side only) */}
+            {isMounted && (
+              isLoggedIn ? (
+                <UserMenu />
+              ) : (
+                <div className="flex items-center gap-2 pl-3 border-l border-gray-200">
+                  <Link
+                    href="/login"
+                    className="text-[12.5px] font-medium text-gray-700 hover:text-red-500 transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <span className="text-gray-300">/</span>
+                  <Link
+                    href="/signup"
+                    className="inline-flex items-center justify-center h-8 px-3.5 rounded-full bg-red-500 hover:bg-red-600 text-white text-[12px] font-semibold shadow-sm shadow-red-500/25 hover:shadow-md transition-all"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )
             )}
           </div>
 
-          {/* ================= MOBILE TOGGLE (LIVE) ================= */}
+          {/* MOBILE TOGGLE */}
           <div className="flex lg:hidden items-center gap-3">
-
-            {/* Wishlist — live */}
             <Link
               href="/wishlist"
               aria-label={`Wishlist (${wishlistCount} items)`}
@@ -212,17 +209,16 @@ export default function Navbar() {
             >
               <FontAwesomeIcon icon={faHeartRegular} className="w-4.5 h-4.5" />
               {wishlistCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4.5 h-4.5 px-1 text-[9px] font-bold text-white bg-red-500 rounded-full">
+                <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4.5 h-4.5 px-1 text-[9px] font-bold text-white bg-red-500 rounded-lg">
                   {formatCount(wishlistCount)}
                 </span>
               )}
             </Link>
 
-            {/* Cart — live */}
             <Link href="/cart" className="relative text-gray-800">
               <FontAwesomeIcon icon={faCartShopping} className="w-4.5 h-4.5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4.5 h-4.5 px-1 text-[9px] font-bold text-white bg-red-500 rounded-full">
+                <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4.5 h-4.5 px-1 text-[9px] font-bold text-white bg-red-500 rounded-lg">
                   {formatCount(cartCount)}
                 </span>
               )}
@@ -243,14 +239,14 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ================= MEGA MENU ================= */}
+      {/* MEGA MENU */}
       {isMegaOpen && (
         <div onMouseEnter={handleMegaEnter} onMouseLeave={handleMegaLeave}>
           <MegaMenu onClose={() => setIsMegaOpen(false)} />
         </div>
       )}
 
-      {/* ================= MOBILE MENU ================= */}
+      {/* MOBILE MENU */}
       {isMobileOpen && (
         <div className="lg:hidden border-t border-gray-100 bg-white shadow-lg absolute w-full max-h-[80vh] overflow-y-auto">
           <div className="max-w-325 mx-auto px-6 py-4 space-y-1">

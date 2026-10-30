@@ -13,8 +13,8 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
 export const metadata = {
-  title: "King's Kollitaible",
-  description: "Curated fashion, lifestyle, and everyday essentials.",
+  title: "King's Kollectibles",
+  description: 'Curated fashion, lifestyle, and everyday essentials.',
 };
 
 export default function RootLayout({ children }) {
@@ -24,17 +24,12 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+      {/* ✅ Added suppressHydrationWarning to body */}
+      <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <AppProviders>
-          {/* Navbar first */}
           <ConditionalNavbar />
-
-          {/* Page content — flex-1 pushes Footer to the bottom */}
           <main className="flex-1">{children}</main>
-
-          {/* Footer last */}
           <ConditionalFooter />
-
           <Toaster position="top-right" />
         </AppProviders>
       </body>

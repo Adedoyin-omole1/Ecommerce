@@ -1,4 +1,4 @@
-// src/app/(main)/home/sections/section2.js
+// src/app/(main)/home/sections/Section2.js
 'use client';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,9 +9,6 @@ import {
     faHeadset,
 } from '@fortawesome/free-solid-svg-icons';
 
-// ==========================================
-// FEATURES DATA
-// ==========================================
 const FEATURES = [
     {
         id: 'shipping',
@@ -42,29 +39,25 @@ const FEATURES = [
 export default function Section2() {
     return (
         <section className="bg-white border-y border-gray-100">
-            <div className="max-w-325 mx-auto px-6 lg:px-8 py-10 lg:py-12">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                     {FEATURES.map((feature) => (
                         <div
                             key={feature.id}
-                            className="flex justify-center"
+                            className="flex justify-center w-full"
                         >
-                            {/* Icon + Text side by side */}
-                            <div className="flex items-center gap-3.5">
-                                {/* Icon */}
+                            <div className="flex items-center gap-2.5 sm:gap-3.5 w-full sm:w-auto">
                                 <div className="shrink-0 flex items-center justify-center text-gray-900">
                                     <FontAwesomeIcon
                                         icon={feature.icon}
-                                        className="w-8 h-8"
+                                        className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8"
                                     />
                                 </div>
-
-                                {/* Text */}
                                 <div className="min-w-0">
-                                    <p className="text-[14px] font-semibold text-gray-900 leading-tight">
+                                    <p className="text-[12.5px] sm:text-[14px] font-semibold text-gray-900 leading-tight">
                                         {feature.title}
                                     </p>
-                                    <p className="text-[12px] text-gray-500 mt-1 leading-tight">
+                                    <p className="text-[10.5px] sm:text-[12px] text-gray-500 mt-0.5 sm:mt-1 leading-tight">
                                         {feature.subtitle}
                                     </p>
                                 </div>
